@@ -1,0 +1,42 @@
+vocabulary dfaVoc {
+type state // states used in APTA
+type label // symbols triggering transitions
+type color // available states for resulting automaton
+partial trans(state , label ): state // transitions of APTA 
+acc(state) // accepting states of APTA
+rej ( state ) // rejecting states of APTA
+colorOf(state): color // fixed in input for colors in clique 
+// the resulting automaton :
+partial colorTrans(color , label ): color // transitions of DFA 
+accColor(color) // accepting states
+}
+theory dfaTheory : dfaVoc {
+! x : acc(x) => accColor(colorOf(x)).
+! x : rej(x) => ~accColor(colorOf(x)). 
+    // trans induces colorTrans :
+ !v l w: trans(w,l)=v =>!j: colorTrans(colorOf(w),l)=j => colorOf(v)=j.
+}
+
+structure S:dfaVoc {
+
+    state={a;b;abaa;bb;abb;abaaaaa;aba;bba}
+    label={a;b}
+    accColor={Blue}
+    color={Red;Blue;Green;Yellow}
+    acc={a;abaa;bb}
+    rej={abb;b}
+    
+}
+
+term nbColorsUsed:dfaVoc{
+    #{x:(?y :colorOf(y)=x)}
+    
+}
+
+procedure main ( ) {
+    stdoptions.verbosity.grounding = 1
+	stdoptions.verbosity.solving = 2
+	print(minimize(dfaTheory,S,nbColorsUsed ) [1] ) 
+}
+
+

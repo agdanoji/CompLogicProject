@@ -1,0 +1,40 @@
+vocabulary sp_voc{
+	type node
+	start:node
+	to:node
+	edge(node,node) 
+	edgeOnPath(node,node) 
+	reacheable(node)
+}
+
+theory sp_theory1:sp_voc {
+    
+    ! x y : edgeOnPath(x,y) => edge(x,y). // (1)
+	{
+    	reacheable(start). // (2)
+		! x y: reacheable(y) <- edgeOnPath(x,y) & reacheable(x).
+	}	
+    reacheable(to).
+}
+
+structure sp_struct:sp_voc {
+	node = {A..D} // shorthand for A,B,C,D
+	edge = {A,B; B,C; C,D; A,D} // `; ' separated list of tuples
+	start = A
+	to = D
+}
+
+term lengthOfPath:sp_voc{
+    #{x,y:edgeOnPath(x,y)} 
+}
+
+procedure main() {
+stdoptions.verbosity.grounding = 1
+stdoptions.verbosity.solving = 2
+sol = minimize(sp_theory1,sp_struct,lengthOfPath)[1]
+if (sol == nil) then
+	    print ("No models exist .\n") 
+else 
+        print (sol)
+end
+}        

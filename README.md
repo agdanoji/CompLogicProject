@@ -1,5 +1,5 @@
 # CompLogicProject
-Three problems implemented in IDP-Web IDE are as follows:
+Two problems implemented in IDP-Web IDE are as follows:
 1. Shortest path problem. 
 -version 1 :sp1.idp
 uses the most basic definition for the transitive closure to find shortest path.
